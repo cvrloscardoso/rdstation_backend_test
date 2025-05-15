@@ -1,0 +1,4 @@
+--require rails_helper
+--colour
+--tag ~external
+--format documentation

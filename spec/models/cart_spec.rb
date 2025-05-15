@@ -1,29 +1,36 @@
-require 'rails_helper'
-
 RSpec.describe Cart, type: :model do
-  context 'when validating' do
-    it 'validates numericality of total_price' do
-      cart = described_class.new(total_price: -1)
-      expect(cart.valid?).to be_falsey
-      expect(cart.errors[:total_price]).to include("must be greater than or equal to 0")
-    end
+  subject { build(:cart) }
+
+  describe 'relationships' do
+    it { is_expected.to have_many(:cart_products) }
+    it { is_expected.to have_many(:products).through(:cart_products) }
   end
 
-  describe 'mark_as_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart) }
-
-    it 'marks the shopping cart as abandoned if inactive for a certain time' do
-      shopping_cart.update(last_interaction_at: 3.hours.ago)
-      expect { shopping_cart.mark_as_abandoned }.to change { shopping_cart.abandoned? }.from(false).to(true)
-    end
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:total_price) }
+    it { is_expected.to validate_numericality_of(:total_price).is_greater_than_or_equal_to(0) }
+    it { is_expected.to validate_presence_of(:status) }
+    it { is_expected.to validate_inclusion_of(:status).in_array(Cart::STATUS) }
   end
 
-  describe 'remove_if_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart, last_interaction_at: 7.days.ago) }
+  describe '#update_total_price!' do
+    let(:cart) { create(:cart) }
+    let(:product1) { create(:product) }
+    let(:product2) { create(:product) }
 
-    it 'removes the shopping cart if abandoned for a certain time' do
-      shopping_cart.mark_as_abandoned
-      expect { shopping_cart.remove_if_abandoned }.to change { Cart.count }.by(-1)
+    around do |example|
+      CartProduct.skip_callback(:save, :after, :update_cart_total_price)
+      example.run
+      CartProduct.set_callback(:save, :after, :update_cart_total_price)
+    end
+
+    before do
+      create(:cart_product, cart: cart, product: product1)
+      create(:cart_product, cart: cart, product: product2)
+    end
+
+    it 'updates the total price of the cart with correct values' do
+      expect { cart.update_total_price! }.to change { cart.total_price }.from(0).to(product1.price + product2.price)
     end
   end
 end

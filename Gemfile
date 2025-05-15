@@ -19,12 +19,14 @@ gem 'active_model_serializers', '~> 0.10.0'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
+  gem 'ffaker'
 end
 
 group :development do
 end
 
 group :test do
-  gem 'rspec-rails', '~> 6.1.0'
   gem 'factory_bot_rails', '~> 6.2'
+  gem 'rspec-rails', '~> 6.1.0'
+  gem 'shoulda-matchers', '~> 5.3'
 end
