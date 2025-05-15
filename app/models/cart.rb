@@ -1,15 +1,14 @@
 class Cart < ApplicationRecord
   STATUS = %w[active abandoned].freeze
 
-  has_many :cart_products
+  has_many :cart_products, dependent: :destroy
   has_many :products, through: :cart_products
 
   validates_numericality_of :total_price, greater_than_or_equal_to: 0
   validates_inclusion_of :status, in: STATUS
 
-  def mark_as_abandoned!
-    update!(status: 'abandoned')
-  end
+  scope :abandonable, -> { where('updated_at <= ?', 3.hours.ago).where('status = ?', 'active') }
+  scope :abandoned_for_seven_days_or_more, -> { where('updated_at <= ?', 7.days.ago).where('status = ?', 'abandoned') }
 
   def update_total_price!
     total_price = cart_products.joins(:product).sum('products.price * cart_products.quantity')

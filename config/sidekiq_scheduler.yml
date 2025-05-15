@@ -1,0 +1,8 @@
+mark_cart_as_abandoned_job:
+  every: 3h
+  class: MarkCartAsAbandonedJob
+  queue: default
+remove_abandoned_carts_job:
+  every: ['7d', first_in: '1m']
+  class: RemoveAbandonedCartsJob
+  queue: default
