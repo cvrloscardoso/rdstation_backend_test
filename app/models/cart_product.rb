@@ -1,0 +1,13 @@
+class CartProduct < ApplicationRecord
+  belongs_to :cart
+  belongs_to :product
+
+  after_save :update_cart_total_price
+  after_destroy :update_cart_total_price
+
+  private
+
+  def update_cart_total_price
+    cart.update_total_price!
+  end
+end
