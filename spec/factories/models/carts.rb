@@ -8,5 +8,9 @@ FactoryBot.define do
         create(:cart_product, cart: cart)
       end
     end
+
+    trait :abandoned do
+      status { 'abandoned' }
+    end
   end
 end
