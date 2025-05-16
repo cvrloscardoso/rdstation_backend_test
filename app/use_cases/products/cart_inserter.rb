@@ -20,7 +20,7 @@ module Products
     attr_reader :cart_id, :cart_product,  :product_id, :quantity
 
     def validate!
-      raise ArgumentError, 'The quantity parameter must be greater than 0' if quantity < 1
+      raise ArgumentError, 'The quantity of the product must be greater than 0' if quantity < 1
       raise ArgumentError, 'This product does not exist' unless product
     end
 
@@ -39,7 +39,6 @@ module Products
     end
 
     def find_cart_product
-      binding.irb
       @cart_product ||= CartProduct.find_by(cart_id: cart_id, product_id: product_id)
     end
 

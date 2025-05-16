@@ -66,6 +66,9 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
+RSpec::Matchers.define_negated_matcher(:not_change, :change)
+RSpec::Matchers.define_negated_matcher(:not_raise_error, :raise_error)
+
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
