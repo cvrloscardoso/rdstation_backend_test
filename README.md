@@ -192,6 +192,11 @@ A aplicação já possui um Dockerfile, que define como a aplicação deve ser c
 ### Como executar o projeto
 
 ## Troubleshooting
+Caso tenha problema com a instalação de gems ao subir o ambiente, tente utilizar o seguinte comando:
+```
+docker compose up --build web
+```
+
 Caso tenha problemas com o banco de dados, tal qual: ActiveRecord::NoDatabaseError: We could not find your database: myapp_test. Available database configurations can be found in config/database.yml.
 Entre manualmente no container usando o comando `docker compose exec test bash` ou `docker run test bash` e execute o seguinte comando:
 ```
