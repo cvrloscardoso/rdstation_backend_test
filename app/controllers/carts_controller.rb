@@ -20,7 +20,7 @@ class CartsController < ApplicationController
   end
 
   def delete
-    ::Products::CartRemover.perform(session[:cart_id], params[:product_id])
+    Products::CartRemover.perform(session[:cart_id], product_id)
 
     render json: current_cart.reload, serializer: CartSerializer
   end

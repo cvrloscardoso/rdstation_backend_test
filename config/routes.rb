@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   resources :products
-  resource :cart, only: %i[show create update delete] do
+  resource :cart, only: %i[show create delete] do
     collection do
       post 'add_item', to: 'carts#add_item'
       delete ':product_id', to: 'carts#delete'

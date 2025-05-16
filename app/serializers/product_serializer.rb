@@ -2,7 +2,7 @@ class ProductSerializer < ActiveModel::Serializer
   attributes :id, :name, :quantity, :unit_price, :total_price
 
   def quantity
-    object.cart_products.last.quantity
+    object.cart_products.last&.quantity
   end
 
   def unit_price
@@ -10,6 +10,6 @@ class ProductSerializer < ActiveModel::Serializer
   end
 
   def total_price
-    (object.price * quantity).to_f
+    return (object.price * quantity).to_f if quantity
   end
 end
